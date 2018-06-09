@@ -1,0 +1,74 @@
+<cms:form masterpage=k_user_template mode='create' enctype='multipart/form-data'  method='post'  anchor='0' >
+
+    <cms:if k_success >
+
+        <cms:set random_password = "<cms:excerpt count='5' trail='' truncate_chars='1'><cms:random_name /></cms:excerpt>" scope='global' />
+
+        <cms:db_persist_form
+            _invalidate_cache='0'
+            k_page_title = "<cms:concat frm_first_name ' ' frm_last_name />"
+            k_publish_date = '0000-00-00 00:00:00'
+            extended_user_password = random_password
+            extended_user_password_repeat = random_password
+        />
+
+  
+            <cms:if k_success >
+
+                <cms:send_mail from=k_email_from to=frm_extended_user_email subject='New Account Confirmation' debug='1'>
+Welcome!
+
+Thank you for the registration, you will receive the user name and password once we have verified your details.
+
+If you have questions or if you need further information please do not hesitate to contact us at any time!
+
+Your Team
+<cms:show k_site_link />
+                </cms:send_mail>
+
+                <cms:send_mail reply_to=frm_extended_user_email from=k_email_from to=k_email_to subject='New Account Request' debug='1'>
+
+User <cms:concat frm_first_name ' ' frm_last_name /> has requested access to the website.
+
+<cms:show k_admin_link />
+
+                </cms:send_mail>
+
+                <cms:set_flash name='registration_success_msg' value='1' />
+                <cms:redirect k_page_link />
+            </cms:if>
+
+    <cms:else />
+
+
+    </cms:if>
+
+    <div class="signup-input padding-top-20 padding-bottom-10">
+        <cms:input type="bound" name="first_name" id="signup_first_name" placeholder="first name" />
+        <cms:if k_error_first_name><div class="messages"><cms:show k_error_first_name /></div></cms:if>
+    </div>
+    <div class="signup-input padding-top-10 padding-bottom-10">
+        <cms:input type="bound" name="last_name" id="signup_last_name" placeholder="last name" />
+        <cms:if k_error_last_name><div class="messages"><cms:show k_error_last_name /></div></cms:if>
+    </div>
+    <div class="signup-input padding-top-10 padding-bottom-10">
+        <cms:input type="bound" name="phone_number" id="signup_phone_number" placeholder="phone number" />
+        <cms:if k_error_phone_number><div class="messages"><cms:show k_error_phone_number /></div></cms:if>
+    </div>
+    <div class="signup-input padding-top-10 padding-bottom-10">
+        <cms:input type="bound" name="extended_user_email" id="signup_email_address" placeholder="email address" />
+        <cms:if k_error_extended_user_email ><div class="messages"><cms:show k_error_extended_user_email /></div></cms:if>
+    </div>
+    <div class="signup-input padding-top-10 padding-bottom-10">
+        <cms:input type="bound" name="company" id="signup_company" placeholder="company" />
+        <cms:if k_error_company><div class="messages"><cms:show k_error_company /></div></cms:if>
+    </div>
+    <div class="signup-input padding-top-10 padding-bottom-10">
+        <cms:input type="bound" name="position" id="signup_position" placeholder="position" />
+        <cms:if k_error_position><div class="messages"><cms:show k_error_position /></div></cms:if>
+    </div>
+    <div class="signup-input padding-top-10 margin-bottom-40">
+        <button id="signup-submit" type="submit" class="bg-blue">Register now</button>
+    </div>
+
+</cms:form>
